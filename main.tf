@@ -23,6 +23,12 @@ provider "aws" {
   region = var.aws_region
 }
 
+# ACM certificate for CloudFront must be in us-east-1
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
 # Data source for current AWS account
 data "aws_caller_identity" "current" {}
 
@@ -181,6 +187,19 @@ module "s3_frontend" {
   environment  = var.environment
 }
 
+# ACM Certificate (Global for CloudFront)
+module "acm" {
+  source = "./modules/acm"
+
+  providers = {
+    aws = aws.us_east_1
+  }
+
+  domain_name  = var.domain_name
+  project_name = var.project_name
+  environment  = var.environment
+}
+
 # CloudFront Distribution
 module "cloudfront" {
   source = "./modules/cloudfront"
@@ -190,5 +209,20 @@ module "cloudfront" {
   alb_dns_name                   = module.alb.dns_name
   project_name                   = var.project_name
   environment                    = var.environment
-  acm_certificate_arn            = var.acm_certificate_arn
+  acm_certificate_arn            = var.acm_certificate_arn != "" ? var.acm_certificate_arn : module.acm.certificate_arn
+  domain_name                    = var.domain_name
+}
+
+# DNS Records (Route53)
+module "route53" {
+  source = "./modules/route53"
+
+  domain_name               = var.domain_name
+  cloudfront_domain_name    = module.cloudfront.domain_name
+  cloudfront_hosted_zone_id = module.cloudfront.hosted_zone_id
+  alb_dns_name              = module.alb.dns_name
+  alb_zone_id               = module.alb.zone_id
+  project_name              = var.project_name
+  environment               = var.environment
+  domain_validation_options = module.acm.domain_validation_options
 }

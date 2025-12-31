@@ -198,13 +198,30 @@ resource "aws_ecs_task_definition" "django" {
 
     environment = [
       { name = "AWS_DEFAULT_REGION", value = var.aws_region },
+
       { name = "REDIS_HOST", value = var.redis_endpoint },
-      { name = "REDIS_PORT", value = "6379" }
+      { name = "REDIS_PORT", value = "6379" },
+
+      { name = "DB_HOST", value = split(":", var.rds_endpoint)[0] },
+      { name = "DB_PORT", value = "5432" },
+      { name = "DB_NAME", value = var.db_name },
     ]
 
     secrets = [
+      # AWS Credentials
       { name = "AWS_ACCESS_KEY_ID", valueFrom = data.aws_secretsmanager_secret.aws_access_key.arn },
-      { name = "AWS_SECRET_ACCESS_KEY", valueFrom = data.aws_secretsmanager_secret.aws_secret_key.arn }
+      { name = "AWS_SECRET_ACCESS_KEY", valueFrom = data.aws_secretsmanager_secret.aws_secret_key.arn },
+
+      # Database Credentials 추가
+      { name = "DB_USER", valueFrom = data.aws_secretsmanager_secret.db_username.arn },
+      { name = "DB_PASSWORD", valueFrom = data.aws_secretsmanager_secret.db_password.arn },
+
+      # Bedrock Secrets 추가
+      { name = "AWS_BEDROCK_KB_ID", valueFrom = data.aws_secretsmanager_secret.bedrock_kb_id.arn },
+      { name = "AWS_BEDROCK_KB_MODEL_ARN", valueFrom = data.aws_secretsmanager_secret.bedrock_kb_model_arn.arn },
+      { name = "AWS_BEDROCK_DEBATE_TOPICS_PROMPT_ARN", valueFrom = data.aws_secretsmanager_secret.bedrock_debate_prompt_arn.arn },
+      { name = "AWS_BEDROCK_AI_PERSON", valueFrom = data.aws_secretsmanager_secret.bedrock_ai_person_prompt_arn.arn },
+      { name = "AWS_BEDROCK_DEBATE_SUMMARY_PROMPT_ARN", valueFrom = data.aws_secretsmanager_secret.bedrock_debate_summary_prompt_arn.arn }
     ]
 
     logConfiguration = {

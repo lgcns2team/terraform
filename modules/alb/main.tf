@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "main" {
   target_type = "ip" # Required for Fargate
 
   health_check {
-    enabled             = true
+    enabled             = var.enable_health_check
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 5

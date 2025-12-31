@@ -1,11 +1,11 @@
 output "endpoint" {
   description = "Redis primary endpoint"
-  value       = data.aws_elasticache_cluster.main.cache_nodes[0].address
+  value       = aws_elasticache_replication_group.main.primary_endpoint_address
 }
 
 output "primary_endpoint_address" {
   description = "Redis primary endpoint address"
-  value       = data.aws_elasticache_cluster.main.cache_nodes[0].address
+  value       = aws_elasticache_replication_group.main.primary_endpoint_address
 }
 
 output "reader_endpoint" {

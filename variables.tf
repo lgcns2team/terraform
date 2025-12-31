@@ -168,8 +168,14 @@ variable "django_memory" {
 }
 
 # SSL Certificate (Optional)
+variable "domain_name" {
+  description = "Domain name for the application"
+  type        = string
+  default     = "khistoryai.com"
+}
+
 variable "acm_certificate_arn" {
-  description = "ACM certificate ARN for HTTPS (leave empty for HTTP only)"
+  description = "ACM certificate ARN for HTTPS (leave empty for automatic creation)"
   type        = string
   default     = ""
 }

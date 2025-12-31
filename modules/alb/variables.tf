@@ -29,6 +29,12 @@ variable "enable_deletion_protection" {
   default     = false
 }
 
+variable "enable_health_check" {
+  description = "Enable health check for Target Group"
+  type        = bool
+  default     = true
+}
+
 variable "certificate_arn" {
   description = "ARN of SSL certificate"
   type        = string

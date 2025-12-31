@@ -32,6 +32,7 @@ resource "aws_cloudfront_distribution" "main" {
   comment             = "${var.project_name} ${var.environment} distribution"
   default_root_object = "index.html"
   price_class         = var.price_class
+  aliases             = [var.domain_name, "*.${var.domain_name}"]
 
   # Origin 1: S3 for Frontend static files
   origin {

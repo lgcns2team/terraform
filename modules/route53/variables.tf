@@ -32,3 +32,9 @@ variable "environment" {
   description = "Environment"
   type        = string
 }
+
+variable "domain_validation_options" {
+  description = "Domain validation options from ACM certificate"
+  type        = any
+  default     = []
+}

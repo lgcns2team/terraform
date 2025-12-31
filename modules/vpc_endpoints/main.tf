@@ -120,6 +120,37 @@ resource "aws_vpc_endpoint" "bedrock_runtime" {
     Environment = var.environment
   }
 }
+
+resource "aws_vpc_endpoint" "bedrock_agent_runtime" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.aws_region}.bedrock-agent-runtime"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [var.private_subnet_id]
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-bedrock-agent-runtime-endpoint"
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}
+
+# VPC Endpoint for Bedrock Agent
+resource "aws_vpc_endpoint" "bedrock_agent" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.aws_region}.bedrock-agent"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [var.private_subnet_id]
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-bedrock-agent-endpoint"
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}
 # VPC Endpoint for SSM
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id              = var.vpc_id

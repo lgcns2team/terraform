@@ -34,3 +34,8 @@ variable "acm_certificate_arn" {
   type        = string
   default     = ""
 }
+
+variable "domain_name" {
+  description = "Domain name for CloudFront aliases"
+  type        = string
+}

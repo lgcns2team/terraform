@@ -95,8 +95,18 @@ output "cloudfront_distribution_id" {
 }
 
 output "cloudfront_domain_name" {
-  description = "CloudFront Domain Name"
+  description = "CloudFront distribution domain name"
   value       = module.cloudfront.domain_name
+}
+
+output "application_url" {
+  description = "Application custom domain URL"
+  value       = "https://${var.domain_name}"
+}
+
+output "acm_certificate_arn" {
+  description = "ACM certificate ARN"
+  value       = module.acm.certificate_arn
 }
 
 output "cloudfront_url" {
